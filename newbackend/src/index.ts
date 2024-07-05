@@ -1,20 +1,28 @@
-import { AppDataSource } from "./data-source"
-import { User } from "./entity/User"
+import "reflect-metadata";
+import { AppDataSource } from "./config/data-source";
+
+import { User } from "../typeorm/entities/User";
 
 AppDataSource.initialize().then(async () => {
+    console.log("Data source has been initialized");
 
-    console.log("Inserting a new user into the database...")
-    const user = new User()
-    user.firstName = "Timber"
-    user.lastName = "Saw"
-    user.age = 25
-    await AppDataSource.manager.save(user)
-    console.log("Saved a new user with id: " + user.id)
+    const user = new User();
+    user.firstname = "Grishma";
+    user.lastname = "Sao";
+    user.email = "grishma15@gmail.com";
+    user.contactnumber = "9316836458";
+    user.dob = new Date('2002-10-15');
+    user.gender = "female"
 
-    console.log("Loading users from the database...")
-    const users = await AppDataSource.manager.find(User)
-    console.log("Loaded users: ", users)
+    await AppDataSource.manager.save(user);
+    console.log("User has been saved");
 
-    console.log("Here you can setup and run express / fastify / any other framework.")
+    const users = await AppDataSource.manager.find(User);
+    console.log("All users from database:", users);
 
-}).catch(error => console.log(error))
+
+}).catch((err) => {
+    console.error("Error during data source initialization:", err)
+})
+
+
