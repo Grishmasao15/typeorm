@@ -123,7 +123,6 @@ export const LoginPage = () => {
   const { login } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  console.log(location, "locationnnnnnnnnnnnn");
 
   const handleLogin = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -133,12 +132,17 @@ export const LoginPage = () => {
       password: password
     }
 
+    console.log(data,"khdvfsdjhfsvdfjshdvf")
+
     try {
       let res = await axios.post("http://192.168.10.65:8000/login", { data }, { withCredentials: true });
       console.log(res, "resloginn");
-      const user = res.data.user;
+      const user = res.data.data;
       // console.log(token);
-      if (res.data.success) {
+      // if(res.data.response_type==="success"){
+
+      // }
+      if (res.data.response_type==="success") {
         await login({ user });
         const from = location.state?.from?.pathname || "/";
         console.log(from);

@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { AppDataSource } from "./config/data-source";
+import { AppDataSource } from "./config/ormconfig";
 
 import { User } from "../typeorm/entities/User";
 

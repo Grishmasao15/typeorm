@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import generalResponse from '../helper/generalResponse.helper'
-import { createUserRepo,getUserRepo,generateToken, createToken,getToken,userActivation } from '../repositories/user.repository';
+import { createUserRepo,getUserRepo,generateToken, createToken,getToken,userActivation, userLogin, checkPassword } from '../repositories/auth.repository';
 
 export const createUser = async (req: Request, res: Response) => {
   try {
@@ -40,7 +40,8 @@ export const createActivationToken=async(req:Request,res:Response)=>{
 
     return generalResponse(res, result)
 
-  }catch(error){
+  }
+  catch(error){
     console.log(error);
     return generalResponse(res, error, '', 'error', false, 400)
   }
@@ -51,7 +52,8 @@ export const getActivationToken=async(req:Request,res:Response)=>{
     const token=await getToken(req.params.email);
     console.log(token,"controller token")
     return generalResponse(res, token)
-  }catch(error){
+  }
+  catch(error){
     console.log(error);
     return generalResponse(res, error, '', 'error', false, 400)
   }
@@ -66,8 +68,39 @@ export const checkActivation=async(req:Request,res:Response)=>{
 
     return generalResponse(res, result)
 
-  }catch(error){
+  }
+  catch(error){
     console.log(error);
     return generalResponse(res, error, '', 'error', false, 400)
   }
+}
+
+export const Login=async(req:Request,res:Response)=>{
+  try{
+    
+    const result=await userLogin(req.body.data)
+    console.log(result)
+
+    if(result){
+      const isCorrect=await checkPassword(req.body.data.password,result.password);
+      
+      if(isCorrect){
+        return generalResponse(res, result)
+      }
+      else{
+        return generalResponse(res,{},"Invalid username or password","invalid")
+      }
+    }
+    else{
+      return generalResponse(res,{},"Invalid username or password","invalid")
+    }
+    
+
+
+  }
+  catch(error){
+    console.log(error);
+    return generalResponse(res, error, '', 'error', false, 400)
+  }
+
 }

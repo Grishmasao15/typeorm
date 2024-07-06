@@ -4,14 +4,14 @@ import { config } from 'dotenv'
 // import { dbInit } from './models'
 
 import db from './db/connection'
-import router from './routes/register.route'
-import { AppDataSource } from './config/data-source'
+import router from './routes/auth.route'
+import { AppDataSource } from './config/ormconfig'
 const app: Application = express()
 config()
 
 // db.connect;
-AppDataSource.initialize().then(async () => {
-  console.log("model initialized succesfullyy")
+db.connect.then(async () => {
+  console.log("model initialized succesfully")
 })
 const port = process.env.PORT || 8000
 

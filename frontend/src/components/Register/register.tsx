@@ -230,7 +230,7 @@ export const Register = () => {
                 <div className="right"></div>
               </div>
               <div className="mv-btn">
-                <p>Already have an Account? <Link to="/" >login</Link></p>
+                <p>Already have an Account? <Link to="/login" >login</Link></p>
               </div>
             </form>
             <div id="activation-link" onClick={active} className="cursor-pointer"></div>

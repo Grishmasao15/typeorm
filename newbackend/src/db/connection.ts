@@ -1,6 +1,6 @@
 
 import "reflect-metadata";
-import { AppDataSource } from "../config/data-source";
+import { AppDataSource } from "../config/ormconfig";
 
 let db = {
   connect: AppDataSource.initialize(),

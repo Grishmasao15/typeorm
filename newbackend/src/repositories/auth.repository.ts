@@ -1,5 +1,5 @@
 import { User } from "../../typeorm/entities/User"
-import { AppDataSource } from "../config/data-source";
+import { AppDataSource } from "../config/ormconfig";
 import jwt from 'jsonwebtoken';
 import { config } from 'dotenv'
 import bcrypt from 'bcrypt';
@@ -76,11 +76,21 @@ export const createToken=async(token:string,id:number)=>{
   }
 }
 
-export const getToken=async(email:string)=>{
+export const getUserByEmail=async(email:string)=>{
   try{
     const data= await userRepository.findOneBy({
     email: email,
     })
+    return data;
+  }
+  catch(error){
+    console.log(error)
+  }
+}
+
+export const getToken=async(email:string)=>{
+  try{
+    const data=await getUserByEmail(email)
     return data?.activation_token
   }catch(error){
     console.log(error)
@@ -89,11 +99,7 @@ export const getToken=async(email:string)=>{
 
 export const userActivation=async(token:string,email:string)=>{
   try{
-   const data= await userRepository.findOneBy({
-    email: email,
-    })
-    console.log(data,"daytfashgdfas")
-    
+    const data=await getUserByEmail(email)    
     const diff: number = Number(new Date(Date.now())) - Number(new Date(data!.token_createdAt));
     const mins: number = Math.floor((diff % 86400000) / 60000);
 
@@ -107,6 +113,29 @@ export const userActivation=async(token:string,email:string)=>{
     }
 
   }catch(error){
+    console.log(error)
+  }
+}
+
+export const userLogin=async(data:{email:string,password:string})=>{
+  try{
+    const result= await userRepository.findOneBy({
+    email: data.email,
+    is_active:true
+    })
+    return result;
+  }
+  catch(error){
+    console.log(error)
+  }
+}
+
+export const checkPassword=async(password:string,hashPassword:string)=>{
+  try{
+    const isCorrect=await bcrypt.compare(password, hashPassword);
+    return isCorrect;
+  }
+  catch(error){
     console.log(error)
   }
 }
